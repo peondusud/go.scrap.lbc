@@ -4,7 +4,7 @@ GOCMD=go
 GOBUILD=$(GOCMD) build
 GOFLAGS ?= $(GOFLAGS:)
 SOURCE=src/lbc.go
-EXECUTABLE=build/lbc.exe
+EXECUTABLE=build/lbc.bin
 GCFLAGS=""
 
 
