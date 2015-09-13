@@ -1,7 +1,7 @@
 package main
 
 import (
-    "fmt"
+    //"fmt"
     "io/ioutil"
     "io"
     "os"
@@ -21,13 +21,13 @@ import (
 
 func curl( url string , c chan []byte)  {
 
-
     response, err := http.Get( url )
     if err != nil {
             log.Fatal(err)
             os.Exit(1)
     }
     defer response.Body.Close()
+
     body_bytes, err := ioutil.ReadAll(response.Body)
     if err != nil {
         log.Fatal(err)
@@ -41,7 +41,7 @@ func fix_broken_html( page []byte) string{
     root, err := html.Parse(page_reader)
 
     if err != nil {
-    log.Fatal(err)
+        log.Fatal(err)
     }
 
     var b bytes.Buffer
@@ -83,17 +83,14 @@ func parse( c chan []byte ){
     //if value, ok := path.String(root); ok { fmt.Println("title:", value)  }
     doc_urls := path.Iter(root);
      for  doc_urls.Next()  {
-            //fmt.Println("doc urls:", doc_urls.Node().String())
+        log.Println("doc urls:", doc_urls.Node().String())
     }
 }
 
 func front_worker (url string, c chan []byte, wg *sync.WaitGroup){
-
+    defer wg.Done() //call at front_worker func exit
     go curl( url , c)
-    //fmt.Printf("%s\n", string(body_bytes))
     parse(c)
-    defer wg.Done()
-
 }
 
 
@@ -106,5 +103,5 @@ func main() {
         go front_worker(url , c, &wg)
     }
     wg.Wait()
-    fmt.Printf("done")
+    log.Println("Done")
 }
