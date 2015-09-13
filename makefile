@@ -9,7 +9,7 @@ GCFLAGS=""
 
 
 build:
-	@$(GOBUILD) -o $(EXECUTABLE) -i $(GOFLAGS) $(SOURCE)
+	@$(GOBUILD) -o $(EXECUTABLE)  $(GOFLAGS) $(SOURCE)
 
 clean:
 	@rm -rf $(EXECUTABLE)
