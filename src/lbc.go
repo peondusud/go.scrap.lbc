@@ -102,7 +102,7 @@ func front_worker( c_front_urls chan string, c_front_page chan []byte, c_doc_url
 
 func front_process( list_urls []string, c_front_urls chan string, c_doc_urls chan string) {
     var wg sync.WaitGroup
-    c_front_page := make( chan []byte )
+    c_front_page := make( chan []byte, 1000 )
     for _,url := range list_urls {
         c_front_urls <- url
         wg.Add(1)
@@ -123,8 +123,8 @@ func doc_process( c_doc_urls chan string, c_documents chan []byte) {
 }
 
 func main() {
-    c_front_urls := make( chan string )
-    c_doc_urls := make( chan string )
+    c_front_urls := make( chan string, 1000)
+    c_doc_urls := make( chan string, 1000)
 
     list_urls := []string{ "http://www.leboncoin.fr/vins_gastronomie/offres/ile_de_france/",  }
     front_process(list_urls, c_front_urls, c_doc_urls)
