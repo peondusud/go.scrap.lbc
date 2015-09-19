@@ -1,10 +1,14 @@
-.PHONY: clean build
+.PHONY: clean build install format get
 
+GOROOT := /usr/lib/go
+GOPATH :=  $(shell pwd)
 GOCMD=go
 GOBUILD=$(GOCMD) build
+GOINSTALL=$(GOCMD) install
+GOFORMAT=$(GOCMD) fmt
 GOGET=$(GOCMD) get
 GOFLAGS ?= $(GOFLAGS:)
-SOURCE=src/lbc.go
+SOURCE=src/lbc/main.go
 EXECUTABLE=build/lbc.bin
 GCFLAGS=""
 
@@ -12,11 +16,20 @@ GCFLAGS=""
 build:
 	@$(GOBUILD) -o $(EXECUTABLE)  $(GOFLAGS) $(SOURCE)
 
+install:
+	export GOPATH=$(GOPATH)
+	export GOROOT=$(GOROOT)
+	$(GOINSTALL) $(SOURCE)
+
+format:
+	@$(GOFORMAT) $(SOURCE)
+
 clean:
 	@rm -rf $(EXECUTABLE)
 
 get:
-	@$(GOGET) golang.org/x/net/html
-	@$(GOGET) golang.org/x/text/transform
-	@$(GOGET) golang.org/x/text/encoding/charmap
-	@$(GOGET) launchpad.net/xmlpath
+	export GOPATH=$(GOPATH)
+	export GOROOT=$(GOROOT)
+	@$(GOGET) -v golang.org/x/net/html
+	@$(GOGET) -v golang.org/x/text/encoding/charmap
+	@$(GOGET) -v launchpad.net/xmlpath
