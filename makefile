@@ -8,7 +8,7 @@ GOINSTALL=$(GOCMD) install
 GOFORMAT=$(GOCMD) fmt
 GOGET=$(GOCMD) get
 GOFLAGS ?= $(GOFLAGS:)
-SOURCE=src/lbc/main.go
+SOURCE=src/lbc/*.go
 EXECUTABLE=build/lbc.bin
 GCFLAGS=""
 
