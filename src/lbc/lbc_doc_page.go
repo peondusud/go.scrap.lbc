@@ -25,11 +25,15 @@ type Lbc_doc_struct struct {
 func doc_process(c_doc_urls chan string, c_documents chan Lbc_doc) {
 	var wg sync.WaitGroup
 	for {
-		wg.Add(1)
-		go doc_worker(c_doc_urls, c_documents, &wg)
-
+		//for i := range c_doc_urls {
+		for i := 1; i <= 35; i++ {
+			//log.Println("RANGE value=%s", i)
+			wg.Add(1)
+			go doc_worker(c_doc_urls, c_documents, &wg)
+		}
+		time.Sleep(200 * time.Millisecond)
 	}
-    wg.Wait()
+	wg.Wait()
 	log.Println("Doc Process Done")
 }
 
