@@ -45,17 +45,19 @@ func fix_broken_html(page []byte) string {
 	return fixedHtml
 }
 
-func decode_utf8(fixedHtml string) io.Reader {
+func decode_utf8(fixedHtml string) string {
 	e := charmap.ISO8859_15
 	reader := strings.NewReader(fixedHtml)
 	rInUTF8 := transform.NewReader(reader, e.NewDecoder())
-	return rInUTF8
+
+	return reader_to_str(rInUTF8)
 }
 
-func remove_noscript(page []byte) []byte {
-	str_noscript := string(page)
-	str_noscript = strings.Replace(str_noscript, "<noscript>", "", -1)
+func remove_noscript(page string) []byte {
+	str_noscript := strings.Replace(page, "<noscript>", "", -1)
+	str_noscript = strings.Replace(str_noscript, "<noscript style=\"color:red\">", "", -1)
 	str_noscript = strings.Replace(str_noscript, "</noscript>", "", -1)
+
 	runes := []byte(str_noscript)
 	return runes
 }
@@ -70,4 +72,14 @@ func get_only_url(str string) string {
 	parameters := url.Values{}
 	Url.RawQuery = parameters.Encode()
 	return Url.String()
+}
+
+func reader_to_str(readr io.Reader) string {
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(readr);
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	return buf.String()
 }

@@ -4,6 +4,8 @@ import (
 	"launchpad.net/xmlpath"
 	"log"
 	"sync"
+	"strings"
+	//"fmt"
 	//"text/template"
 )
 
@@ -32,14 +34,24 @@ func front_parse(c_front_urls chan string, c_front_page chan []byte, c_doc_urls 
 	//path := xmlpath.MustCompile("/html/body/div/div[2]/div/div[3]/div/div[1]/div[1]/h1/text()") //title
 	doc_urls_xpath := xmlpath.MustCompile("/html/body/div[@id=\"page_align\"]/div[@id=\"page_width\"]/div[@id=\"ContainerMain\"]/div[@class=\"content-border list\"]/div[@class=\"content-color\"]/div[@class=\"list-lbc\"]//a/@href") //doc urls
 	next_front_urls_xpath := xmlpath.MustCompile("/html/body/div[@id=\"page_align\"]/div[@id=\"page_width\"]/div[@id=\"ContainerMain\"]/nav/ul[@id=\"paging\"]/li[@class=\"page\"]")                                                   //next url
-
+	/*
 	front_page_noscript := remove_noscript(front_page)
 	fix_html := fix_broken_html(front_page_noscript)
 	utf8_reader := decode_utf8(fix_html)
-	root, err := xmlpath.ParseHTML(utf8_reader)
+	root, err := xmlpath.ParseHTML(utf8_reader)*/
+
+	utf8_reader := decode_utf8( string(front_page) )
+	doc_page_noscript := remove_noscript( utf8_reader )
+
+	fix_html := fix_broken_html(doc_page_noscript)
+
+	//fmt.Println(string(fix_html))
+
+	root, err := xmlpath.ParseHTML( strings.NewReader(fix_html) )
 
 	if err != nil {
-		log.Fatal(err)
+		//log.Println("ca rentre")
+		log.Fatal("FRONT PAGE",err)
 	}
 
 	doc_urls := doc_urls_xpath.Iter(root)
